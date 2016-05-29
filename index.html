@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en" class=" js no-flexbox canvas canvastext webgl no-touch geolocation postmessage websqldatabase indexeddb hashchange history draganddrop websockets rgba hsla multiplebgs backgroundsize borderimage borderradius boxshadow textshadow opacity cssanimations csscolumns cssgradients cssreflections csstransforms csstransforms3d csstransitions fontface generatedcontent video audio localstorage sessionstorage webworkers applicationcache svg inlinesvg smil svgclippaths js no-flexbox canvas canvastext webgl no-touch geolocation postmessage websqldatabase indexeddb hashchange history draganddrop websockets rgba hsla multiplebgs backgroundsize borderimage borderradius boxshadow textshadow opacity cssanimations csscolumns cssgradients cssreflections csstransforms csstransforms3d csstransitions fontface generatedcontent video audio localstorage sessionstorage webworkers applicationcache svg inlinesvg smil svgclippaths"><head>
+    <meta charset="utf-8">
+    <title>NBA Shots d3js</title>
+    <meta name="description" content="HTML framework description">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="css/general.css">
+	<!-- Google fonts -->
+	<link href="http://fonts.googleapis.com/css?family=Ubuntu:300,400,500,700,300italic,400italic,500italic,700italic%7COswald:400,300,700&amp;subset=latin,latin-ext" rel="stylesheet" type="text/css">
+	<!-- Font awesome -->
+	<link rel="stylesheet" href="css/font-awesome.css">
+    <!-- Modernizr -->
+    <script type="text/javascript" src="js/libs/modernizr-2.5.3.min.js"></script>
+
+    <link type="text/css" rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/themes/base/jquery-ui.css" />
+    <link type="text/css" rel="stylesheet" href="http://gregfranko.com/jquery.selectBoxIt.js/css/jquery.selectBoxIt.css" />
+
+    <!-- Semantic HTML5 Support on old IE -->
+    <!--[if IE]>
+    <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+</head>
+<body>
+    <!-- Header Section. If need a menu section, use tag: <nav> -->
+
+    <header>
+		<div class="top">
+			<div class="container">
+				<div class="col-12">
+				  <div class="col-2">
+					<div class="logo"><img style="height:50px" src="css/images/logo.png" alt=""></div>
+				  </div>
+					<nav id="top-menu">
+						<ul class="clearfix">
+							<li class="active"><a href="index.html">Home</a></li>
+							<li><a href="team.html">Wiki</a></li>
+							<li><a href="video.html">About</a></li>
+						</ul>
+						<a href="#" id="pull">Menu</a>
+					</nav>
+                    <nav class="mobilemenu">
+                        <select>
+                            <option value="index.html">Home</option>
+                            <option value="team.html">Team</option>
+                            <option value="video.html">Video</option>
+                            <option value="blog.html">Blog</option>
+                            <option value="club.html">Club</option>
+                            <option value="gallery.html">Gallery</option>
+                            <option value="contact.html">Contact</option>
+                        </select>
+                    </nav>
+
+				</div>
+			</div>
+		</div>
+    </header>
+
+    <!-- Content Section. If need sidebars use the tag: <aside>. If articles use tag: <article> -->
+    <section id="m-a-n">
+	<div style="max-width:100%" class="container">
+		<div class="col-12">
+			<div class="match">
+				<div class="m-result">
+				<div class="logo-club col-5"><img id="player-img-1" src="http://stats.nba.com/media/players/230x185/203081.png" alt=""></div>
+				<span class="result col-2">vs.</span>
+				<div class="logo-club col-5"><img id="player-img-2" src="http://stats.nba.com/media/players/230x185/203081.png" alt=""></div>
+				<div class="club-name col-12">
+				<div class="col-5">
+            <div id="player-name-1">Damian Lillard</div>
+            <div>
+              <select id="teams-1" name="teams-1">
+                <option>Atlanta Hawks</option>
+                <option>Boston Celtics</option>
+                <option >Brooklyn Nets</option>
+                <option>Charlotte Hornets</option>
+                <option>Chicago Bulls</option>
+                <option>Cleveland Cavaliers</option>
+                <option>Dallas Mavericks</option>
+                <option>Denver Nuggets</option>
+                <option>Detroit Pistons</option>
+                <option>Golden State Warriors</option>
+                <option>Houston Rockets</option>
+                <option>Indiana Pacers</option>
+                <option>LA Clippers</option>
+                <option>LA Lakers</option>
+                <option>Memphis Grizzlies</option>
+                <option>Miami Heat</option>
+                <option>Milwaukee Bucks</option>
+                <option>Minnesota Timberwolves</option>
+                <option>New Orleans Pelicans</option>
+                <option>New York Knicks</option>
+                <option>Oklahoma City Thunder</option>
+                <option>Orlando Magic</option>
+                <option>Philadelphia 76ers</option>
+                <option>Phoenix Suns</option>
+                <option selected>Portland Trail Blazers</option>
+                <option>Sacramento Kings</option>
+                <option>San Antonio Spurs</option>
+                <option>Toronto Raptors</option>
+                <option>Utah Jazz</option>
+                <option>Washington Wizards</option>
+              </select>
+            </div>
+            <div>
+              <select id="players-1" name="players-2">
+
+              </select>
+            </div>
+        </div>
+				<div class="match-name col-2">
+              <div>
+              <select id="year">
+                  <option selected>2015-16</option>
+                  <option>2014-15</option>
+                  <option>2013-14</option>
+                  <option>2012-13</option>
+              </select>
+            </div>
+            <div class="bottom-form"><button class="btn-dflt btn-red">Generate Charts</button></div>
+        </div>
+        <div class="col-5">
+            <div id="player-name-2">Damian Lillard</div>
+            <div>
+              <select id="teams-2" name="teams-2">
+                <option>Atlanta Hawks</option>
+                <option>Boston Celtics</option>
+                <option >Brooklyn Nets</option>
+                <option>Charlotte Hornets</option>
+                <option>Chicago Bulls</option>
+                <option>Cleveland Cavaliers</option>
+                <option>Dallas Mavericks</option>
+                <option>Denver Nuggets</option>
+                <option>Detroit Pistons</option>
+                <option>Golden State Warriors</option>
+                <option>Houston Rockets</option>
+                <option>Indiana Pacers</option>
+                <option>LA Clippers</option>
+                <option>LA Lakers</option>
+                <option>Memphis Grizzlies</option>
+                <option>Miami Heat</option>
+                <option>Milwaukee Bucks</option>
+                <option>Minnesota Timberwolves</option>
+                <option>New Orleans Pelicans</option>
+                <option>New York Knicks</option>
+                <option>Oklahoma City Thunder</option>
+                <option>Orlando Magic</option>
+                <option>Philadelphia 76ers</option>
+                <option>Phoenix Suns</option>
+                <option selected>Portland Trail Blazers</option>
+                <option>Sacramento Kings</option>
+                <option>San Antonio Spurs</option>
+                <option>Toronto Raptors</option>
+                <option>Utah Jazz</option>
+                <option>Washington Wizards</option>
+              </select>
+            </div>
+            <div>
+              <select id="players-2" name="players-2">
+
+              </select>
+            </div>
+        </div>
+				</div>
+				</div>
+			</div>
+			<div class="a-games">
+				<ul class="clearfix">
+					<li><span class="text-right">FC Bayern München</span><span class="d-g">14 Apr 21:45</span><span class="text-left">Borussia M'gladbach</span></li>
+					<li><span class="text-right">Eintracht Frankfurt</span><span class="d-g">14 Apr 21:45</span><span class="text-left">FC Bayern München</span></li>
+					<li><span class="text-right">FC Bayern München</span><span class="d-g">14 Apr 21:45</span><span class="text-left">Hoffenheim</span></li>
+					<li><span class="text-right">FC Bayern München</span><span class="d-g">14 Apr 21:45</span><span class="text-left">VfB Stuttgart</span></li>
+				</ul>
+			</div>
+		</div>
+
+    </div>
+	</section>
+
+
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
+  <script src="http://gregfranko.com/jquery.selectBoxIt.js/js/jquery.selectBoxIt.min.js"></script>
+
+    <!-- Custom -->
+    <!--<script src="js/scripts.js"></script>-->
+
+<script>
+
+//Executes your code when the DOM is ready.  Acts the same as $(document).ready().
+  $(function() {
+
+    var teams = {
+          'Atlanta Hawks': 1610612737,
+          'Boston Celtics': 1610612738,
+          'Brooklyn Nets': 1610612751,
+          'Charlotte Hornets': 1610612766,
+          'Chicago Bulls': 1610612741,
+          'Cleveland Cavaliers': 1610612739,
+          'Dallas Mavericks': 1610612742,
+          'Denver Nuggets': 1610612743,
+          'Detroit Pistons': 1610612765,
+          'Golden State Warriors': 1610612744,
+          'Houston Rockets': 1610612745,
+          'Indiana Pacers': 1610612754,
+          'LA Clippers': 1610612746,
+          'LA Lakers': 1610612747,
+          'Memphis Grizzlies': 1610612763,
+          'Miami Heat': 1610612748,
+          'Milwaukee Bucks': 1610612749,
+          'Minnesota Timberwolves': 1610612750,
+          'New Orleans Pelicans': 1610612740,
+          'New York Knicks':1610612752,
+          'Oklahoma City Thunder': 1610612760,
+          'Orlando Magic': 1610612753,
+          'Philadelphia 76ers': 1610612755,
+          'Phoenix Suns': 1610612756,
+          'Portland Trail Blazers': 1610612757,
+          'Sacramento Kings': 1610612758,
+          'San Antonio Spurs': 1610612759,
+          'Toronto Raptors': 1610612761,
+          'Utah Jazz': 1610612762,
+          'Washington Wizards': 1610612764
+      },
+      players;
+
+  // Calls the selectBoxIt method on your HTML select box and uses the default theme
+  $("#teams-1").selectBoxIt();
+
+  $("#year").selectBoxIt();
+
+  // Calls the selectBoxIt method on your HTML select box and uses the default theme
+  $("#teams-2").selectBoxIt();
+
+  $( '#teams-1').change(function() {
+    loadPlayers("1");
+  });
+
+  $( '#teams-2').change(function() {
+    loadPlayers("2");
+  });
+
+  $( '#players-1').change(function() {
+    loadPlayerInfo("1");
+  });
+
+  $( '#players-2').change(function() {
+    loadPlayerInfo("2");
+  });
+
+  function loadPlayerInfo(playerSelector) {
+    $("#player-img-"+playerSelector).attr('src','http://stats.nba.com/media/players/230x185/' + $('#players-' + playerSelector + ' option:selected').val() + '.png');
+    $("#player-name-"+playerSelector).html($('#players-' + playerSelector + ' option:selected').text());
+  }
+
+  function loadPlayers(teamSelector) {
+    var team = teams[$('#teams-' + teamSelector + ' option:selected').text()];
+
+    $("#players-"+teamSelector).data("selectBox-selectBoxIt").remove();
+
+    $.ajax({
+        url: 'http://stats.nba.com/stats/commonteamroster?&Season='+$("#year option:selected").text()+'&TeamID=' + team,
+        jsonp: "callback",
+        dataType: "jsonp",
+        success: function( response ) {
+          // changing team should change player profile pic & playername as well.
+          $("#player-img-"+teamSelector).attr('src','http://stats.nba.com/media/players/230x185/' + response.resultSets[0].rowSet[0][12] + '.png');
+          $("#player-name-"+teamSelector).html(response.resultSets[0].rowSet[0][3]);
+          var player_name, player_id, player_jsonObject, arr = [], x = -1;
+          while(++x < response.resultSets[0].rowSet.length) {
+            player_name = response.resultSets[0].rowSet[x][3];
+            player_id = response.resultSets[0].rowSet[x][12];
+            player_jsonObject = { "text": player_name, "value":player_id };
+            arr.push(player_jsonObject);
+          }
+          $("#players-"+teamSelector).data("selectBox-selectBoxIt").add(arr)
+        }
+    });
+  }
+    // Calls the selectBoxIt method on your HTML select box
+    $("#players-2,#players-1").each(function(){
+
+    $(this).selectBoxIt({
+      //defaultText: "Select Player",
+      // Populates the drop down using a jQuery deferred object
+      populate: function() {
+          var deferred = $.Deferred(),
+              arr = [],
+              x = -1;
+
+              $.ajax({
+                  url: 'http://stats.nba.com/stats/commonteamroster?&Season='+$("#year option:selected").text()+'&TeamID=1610612757',
+                  jsonp: "callback",
+                  dataType: "jsonp",
+                  success: function( response ) {
+                    var player_name, player_id, player_jsonObject;
+                    while(++x < response.resultSets[0].rowSet.length) {
+                        player_name = response.resultSets[0].rowSet[x][3];
+                        player_id = response.resultSets[0].rowSet[x][12];
+                        player_jsonObject = { "text": player_name, "value":player_id };
+                        arr.push(player_jsonObject);
+                    }
+                    deferred.resolve(arr);
+
+                  }
+              });
+              return deferred;
+      }
+    });
+
+    });
+
+  });
+
+</script>
+
+</body>
+</html>

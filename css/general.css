@@ -1340,15 +1340,20 @@ section#m-a-n {
 }
 .m-result {
   text-align: center;
-      padding: 0px 60px;
+      /*padding: 0px 60px;*/
       /* padding: 0px 350px; */
       /* float: left; */
       /* margin-left: auto; */
       /* margin-right: auto; */
 }
+
+.player-image {
+      margin-top: -70px;
+}
+
 .logo-club {
   text-align: center;
-  margin-top: -45px;
+  /*margin-top: -45px;*/
   position: relative;
 }
 .logo-club img {
@@ -1363,6 +1368,20 @@ span.result {
   vertical-align: bottom;
   margin: 0px 0px;
 }
+
+.btn-zoom {
+    background: #da0040;
+    -webkit-transition: all 300ms ease-in-out;
+    -moz-transition: all 300ms ease-in-out;
+    -ms-transition: all 300ms ease-in-out;
+    -o-transition: all 300ms ease-in-out;
+    transition: all 300ms ease-in-out;
+    margin: 10px;
+    padding-left: 30px;
+    padding-right: 30px;
+    font-size: 14px;
+}
+
 span.result b {
   color: #AA0435;
   display: inline;
@@ -1370,7 +1389,7 @@ span.result b {
 }
 .club-name {
   font-size: 32px;
-  margin-bottom: 25px;
+  margin-bottom: 10px;
   float: left;
 }
 .club-name span {
@@ -2475,7 +2494,7 @@ article.blog-item {
   margin-bottom: 10px;
 }
 .bottom-form {
-  padding: 20px 0px;
+  padding: 5px 0px;
 }
 /*/////////////////////////////////////////////////////////////////////////*/
 /* NUMBERED LIST STYLE */

@@ -14,28 +14,51 @@
 11. Contacts / .contact-form
 12. Footer / footer
 -------------------------------------------------------------------*/
-/* Gradients / .gradient - elements.less
-/* ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## */
-/* Bordered / .bordered - elements.less
-/* ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## */
-/* Rounded / .rounded - elements.less
-/* ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## */
-/* Opacity / .opacity - elements.less
-/* ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## */
-/* Transition / .rotation - elements.less
-/* ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## */
-/* Shawows / .drop-shadow - elements.less
-/* ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## */
-/* Columns / .columns - elements.less
-/* ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## */
-/* Fonts / .main-font - elements.less
-/* ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## */
-/* Spacing / .spacing - elements.less
-/* ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## */
-/* Other / .inline-block - elements.less
-/* ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## */
-/* Grid System 12 Columns
-/* ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## */
+
+.tooltip {
+    position: absolute;
+    z-index: 1070;
+    display: block;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1.42857143;
+    text-align: left;
+    text-align: start;
+    text-decoration: none;
+    text-shadow: none;
+    text-transform: none;
+    letter-spacing: normal;
+    word-break: normal;
+    word-spacing: normal;
+    word-wrap: normal;
+    white-space: normal;
+    filter: alpha(opacity=0);
+    opacity: 0;
+    line-break: auto;
+}
+
+.tooltip.shots {
+    max-width: 300px;
+    z-index: 10;
+    margin: 0px 14px 7px 0px;
+    padding: 8px;
+    background: #222;
+    background: rgba(0,0,0,0.8);
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+    -moz-box-shadow: 2px 2px 0 rgba(0,0,0,0.15),-1px -1px 0 rgba(255,255,255,0.3);
+    -webkit-box-shadow: 2px 2px 0 rgba(0,0,0,0.15),-1px -1px 0 rgba(255,255,255,0.3);
+    box-shadow: 2px 2px 0 rgba(0,0,0,0.15),-1px -1px 0 rgba(255,255,255,0.3);
+    font-family: Verdana,Geneva,sans-serif;
+    font-size: 11px;
+    line-height: 16px;
+    color: white;
+    z-index: 100000;
+}
+
 .container {
   margin-left: auto;
   margin-right: auto;

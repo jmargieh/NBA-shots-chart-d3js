@@ -24,8 +24,8 @@
     <style>
 
 .dot {
-/*  stroke: #000;
-  stroke-opacity: .1;*/
+  stroke: #000;
+  stroke-opacity: .1;
   fill-opacity: .75;
 }
 
@@ -378,11 +378,44 @@
     .attr("cy", function(d) { return yValue(d);})
     .attr("class", function(d) { return classByShot(d);})
     .style("fill", function(d) { return colorValue(d);})
+    .on("mouseover", function(d) {
+        d3.select(this).style("stroke", '#000').style('stroke-opacity', '.8');
+    })
+    .on("mouseout", function(d) {
+        d3.select(this).style("stroke", '#000').style('stroke-opacity', '0');
+    })
+    .on("click", function(d) {
+        if (d3.select(this).classed("hasTooltip")) {
+          $(".tooltip").remove();
+          d3.select(this).classed("hasTooltip", false);
+        } else {
+          d3.select(this).classed("hasTooltip", true);
+          $(".tooltip").remove();
+          // add the tooltip area to the body as div
+          var tooltip = d3.select("body").append("div")
+          .attr("class", "tooltip shots")
+          .style("opacity", 0);
+
+          $("#vid").remove();
+          tooltip.transition()
+          .duration(200)
+          .style("opacity", .9);
+
+          tooltip.html((d[20] ? "Made " : "Missed ") + d[11] +  "<br/>" + 
+                    "Quarter: " + d[7] + " Time: " + d[8] + ":" + (d[9] < 10 ? "0" : "") + d[9] +  "<br/>" + 
+                    "Shot Distance: " + d[16] + " feet"  + "<br/>" +  
+                    "<a href=\"#\" id=\"vid\">View Shot</a>")
+            .style("left", (d3.event.pageX + 5) + "px")
+            .style("top", (d3.event.pageY - 28) + "px");
+            $('#vid').on('click', function () {
+                $.featherlight({iframe: 'http://stats.nba.com/cvp.html?GameID='+ d[1] + '&GameEventID=' + d[2] + '#',  iframeWidth: 850,iframeHeight: 360});          
+            }); 
+        }
+    });
 
     return svg;
   
   }
-
 
 ////*/*/*/*/*///// D3.JS ////*/*/*/*/*/////
 

@@ -38,6 +38,13 @@
   float: right;
 }
 
+#toggleMadeShots:disabled {
+  background: #ccc; 
+  cursor: none;
+  pointer-events:none;
+}
+
+
     </style>
 
 </head>
@@ -363,10 +370,10 @@
         return document.createElementNS(d3.ns.prefix.svg, shape);
       })
     .attr("r", 4)
-    .attr("width", 7)
-    .attr("height", 7)
-    .attr("x", function(d) { return  xValue(d);})
-    .attr("y", function(d) { return yValue(d);})
+    // .attr("width", 7)
+    // .attr("height", 7)
+    // .attr("x", function(d) { return  xValue(d);})
+    // .attr("y", function(d) { return yValue(d);})
     .attr("cx", function(d) { return  xValue(d);})
     .attr("cy", function(d) { return yValue(d);})
     .attr("class", function(d) { return classByShot(d);})
@@ -498,10 +505,10 @@
       populate: function() {
           var deferred = $.Deferred(),
               arr = [],
-              x = -1;
-
+              x = -1,
+              team = teams[$('#teams-1 option:selected').text()];
               $.ajax({
-                  url: 'http://stats.nba.com/stats/commonteamroster?&Season='+$("#year option:selected").text()+'&TeamID=1610612757',
+                  url: 'http://stats.nba.com/stats/commonteamroster?&Season='+$("#year option:selected").text()+'&TeamID=' + team,
                   jsonp: "callback",
                   dataType: "jsonp",
                   success: function( response ) {
@@ -527,19 +534,25 @@ $( "#toggleColoredShotChart" ).click(function() {
       if ($("#image-url").attr("href") === "css/images/court-bg-mod.jpg") {
         $("#image-url").attr("href","css/images/court-bg-mod-color.jpg");
         $(this).html("Hide shot zone areas");
+        $('.dot').hide(2000);
+        $("#toggleMadeShots").prop("disabled",true);
       } else {
         $("#image-url").attr("href","css/images/court-bg-mod.jpg");
         $(this).html("Show shot zone areas");
+        $('.dot').show(2000);
+        $( "#toggleMadeShots" ).html("Hide missed shots");
+        $("#toggleMadeShots").prop("disabled",false);
       }
 });
 
 $( "#toggleMadeShots" ).click(function() {
   if ($(this).text() === "Hide missed shots") {
     $(this).html("Show missed shots");
+    $('.missed').hide(2000);
   } else {
     $(this).html("Hide missed shots");
+    $('.missed').show(2000);
   }
-  $('.missed').toggle(2000);
 });
 
 

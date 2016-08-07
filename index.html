@@ -18,8 +18,10 @@
     <link type="text/css" rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/themes/base/jquery-ui.css" />
     <link type="text/css" rel="stylesheet" href="http://gregfranko.com/jquery.selectBoxIt.js/css/jquery.selectBoxIt.css" />
 
+    <script type="text/javascript" src="js/liquidFillGauge.js"></script>
     <script type="text/javascript" src="http://d3js.org/d3.v3.min.js"></script>
     <script type="text/javascript" src="js/d3.hexbin.min.js"></script>
+    
 
 
     <style>
@@ -34,10 +36,22 @@
   display: inline-block;
 }
 
+
 #shotAreasLabels { 
   display: inline-block;
   float: right;
+  display: none;
 }
+
+.liquidFillGaugeText { 
+  font-family: Helvetica; 
+  font-weight: bold; 
+}
+
+.shot-labes ul {
+  list-style: none;
+}
+
 
 #toggleMadeShots:disabled {
   background: #ccc; 
@@ -157,7 +171,7 @@
 
     </div>
 	</section>
-<section style="text-align:center">
+<section style="text-align: center">
     <div>
     <button class="btn-dflt btn-zoom zoomOp" id="zoom_in">+</button>
     <button class ="btn-dflt btn-zoom zoomOp" id="zoom_reset">Reset</button>
@@ -169,7 +183,16 @@
     </div>
       <div style="display: inline-block">
         <div id="chart"> </div>
-        <div id="shotAreasLabels">Labels Here</div>
+        <div id="shotAreasLabels" class="shot-labels">Labels Here
+          <!-- <ul>
+            <li>Above the Break 3</li>
+            <li>In The Paint (Non-RA)</li>
+            <li>Left Corner 3</li>
+            <li>Mid-Range</li>
+            <li>Restricted Area</li>
+            <li>Right Corner 3</li>
+          </ul> -->
+          </div>
       </div>
   </div>
 </section>
@@ -295,8 +318,8 @@
     .attr("fill", "url(#bg)");
 
     playerData = playerData['resultSets'][0]['rowSet'];
-    console.log(playerData);
-
+    /*console.log(playerData);*/
+    
     //found correct range by hand..varies with svg
     var xScale = d3.scale.linear()
     .domain([-250, 250])
@@ -562,19 +585,118 @@
     });
 
 
+function loadShotsCharts(globalData){
+    shotsData = globalData['resultSets'][0]['rowSet'];
+    var arr = [];
+    var shot;
+    var area_zone = ["Above the Break 3","In The Paint (Non-RA)","Left Corner 3","Mid-Range","Restricted Area","Right Corner 3"];
+    var fg_pct, shotArea_jsonObject; 
+    var fga = [0,0,0,0,0,0];
+    var fgm = [0,0,0,0,0,0];
+    /* calculate Above the Break 3 Area */
+    for(i=0; i< shotsData.length; i++)
+    {
+      shot = shotsData[i][13];
+      switch(shot){
+        case "Above the Break 3" : 
+            if(shotsData[i][10] == "Made Shot"){
+              fgm[0] = fgm[0]  + 1;
+              fga[0] = fga[0] + 1;
+             }
+            else{ /*Missed Shot*/
+              fga[0] = fga[0] + 1; 
+             }
+            break;    
+
+      case "In The Paint (Non-RA)":
+            if(shotsData[i][10] == "Made Shot"){
+              fgm[1] = fgm[1] + 1;
+              fga[1] = fga[1] + 1;
+            }
+            else{ /*Missed Shot*/
+              fga[1] = fga[1]+ 1; 
+            }
+           break;    
+
+      case "Left Corner 3":
+            if(shotsData[i][10] == "Made Shot"){
+              fgm[2] = fgm[2] + 1;
+              fga[2] = fga[2] + 1;
+            }
+            else{ /*Missed Shot*/
+              fga[2] = fga[2] + 1; 
+            }
+           break;    
+
+      case "Mid-Range":
+            if(shotsData[i][10] == "Made Shot"){
+              fgm[3] = fgm[3]  + 1;
+              fga[3]  = fga[3]  + 1;
+            }
+            else{ /*Missed Shot*/
+              fga[3] = fga[3]  + 1; 
+            }
+           break; 
+
+      case "Restricted Area":
+            if(shotsData[i][10] == "Made Shot"){
+              fgm[4] = fgm[4]  + 1;
+              fga[4]  = fga[4]  + 1;
+            }
+            else{ /*Missed Shot*/
+              fga[4] = fga[4]  + 1; 
+            }
+           break; 
+
+      case "Right Corner 3":
+            if(shotsData[i][10] == "Made Shot"){
+              fgm[5] = fgm[5]  + 1;
+              fga[5]  = fga[5]  + 1;
+            }
+            else{ /*Missed Shot*/
+              fga[5] = fga[5]  + 1; 
+            }
+           break; 
+    }
+  }
+    for(i=0; i< area_zone.length; i++){
+      shotArea_jsonObject = {"Area Name": area_zone[i], "FGA": fga[i], "FGM": fgm[i], "FG_PCT": fgm[i]/fga[i]};
+    arr.push(shotArea_jsonObject);
+    }
+    
+    /*console.log(arr);*/
+    
+    fillCharts(arr);
+}
+
+
+function fillCharts(stats){
+
+   
+
+    var gauge1 = loadLiquidFillGauge("fillgauge1", stats[0][5]);
+    var config1 = liquidFillGaugeDefaultSettings();
+    
+}
+
+
 $( "#toggleColoredShotChart" ).click(function() {
       if ($("#image-url").attr("href") === "css/images/court-bg-mod.jpg") {
         $("#image-url").attr("href","css/images/court-bg-mod-color.jpg");
         $(this).html("Hide shot zone areas");
         $('.dot').hide(2000);
         $("#toggleMadeShots").prop("disabled",true);
+        $('#shotAreasLabels').show();
+        var chartSVG = loadShotsCharts(globalData);
       } else {
         $("#image-url").attr("href","css/images/court-bg-mod.jpg");
         $(this).html("Show shot zone areas");
         $('.dot').show(2000);
-        $( "#toggleMadeShots" ).html("Hide missed shots");
+        $("#toggleMadeShots" ).html("Hide missed shots");
         $("#toggleMadeShots").prop("disabled",false);
+        $('#shotAreasLabels').hide();
       }
+      
 });
 
 $( "#toggleMadeShots" ).click(function() {

@@ -18,9 +18,12 @@
     <link type="text/css" rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/themes/base/jquery-ui.css" />
     <link type="text/css" rel="stylesheet" href="http://gregfranko.com/jquery.selectBoxIt.js/css/jquery.selectBoxIt.css" />
 
-    <script type="text/javascript" src="http://d3js.org/d3.v3.min.js"></script>
+    <!-- <script type="text/javascript" src="http://d3js.org/d3.v3.min.js"></script> -->
     <script type="text/javascript" src="js/d3.hexbin.min.js"></script>
 
+
+
+      <script src="//d3js.org/d3.v4.min.js"></script>
 
     <style>
 
@@ -188,13 +191,14 @@
 
 /* ZOOM IN/OUT IMPLEMENTATION CODE */
 
-    var zoom = d3.behavior.zoom().scaleExtent([1, 8]).on("zoom", zoomed);
+    var zoom = d3.zoom().scaleExtent([1, 8]).on("zoom", zoomed);
 
     function zoomed() {
-        chartSVG.attr("transform",
-            "translate(" + zoom.translate() + ")" +
-            "scale(" + zoom.scale() + ")"
-        );
+      chartSVG.attr("transform", d3.event.transform)
+        // chartSVG.attr("transform",
+        //     "translate(" + zoom().translate() + ")" +
+        //     "scale(" + zoom().scale() + ")"
+        // );
     }
 
     function interpolateZoom (translate, scale, isReset) {
@@ -298,12 +302,12 @@
     console.log(playerData);
 
     //found correct range by hand..varies with svg
-    var xScale = d3.scale.linear()
+    var xScale = d3.scaleLinear()
     .domain([-250, 250])
     //.range([42, 738]);
     .range([0, 780]);
 
-    var yScale = d3.scale.linear()
+    var yScale = d3.scaleLinear()
     .domain([-1,0, -150])
     .range([590,589, 371]);
 
@@ -315,25 +319,6 @@
         if(d[10] === "Made Shot") {
             return "#6ae916";
         }
-
-        // if(d[13] === "Mid-Range") {
-        //     return "#33ccff"
-        // }
-        // if(d[13] === "Right Corner 3") {
-        //     return "#0000ff"
-        // }
-        // if(d[13] === "Left Corner 3") {
-        //     return "#ff9900"
-        // }
-        // if(d[13] === "Above the Break 3") {
-        //     return "#ff0000"
-        // }
-        // if(d[13] === "Restricted Area") {
-        //     return "#cc33ff"
-        // }
-        // if(d[13] === "In The Paint (Non-RA)") {
-        //     return "#009900"
-        // }
     }
 
   var xValue = function(d) {
@@ -356,23 +341,8 @@
     d3.selectAll('dot').remove();
     var node = svg.selectAll("dot").data(playerData)
     node.enter()
-    .append(function(d) {
-        var shape;
-        if(d[10] === "Missed Shot") {
-            shape = "svg:circle";
-        }
-        if(d[10] === "Made Shot") {
-            shape = "svg:rect";
-        }
-        // remove in order to get rect or circle
-        shape = "svg:circle";
-        return document.createElementNS(d3.ns.prefix.svg, shape);
-      })
+    .append("svg:circle")
     .attr("r", 4)
-    // .attr("width", 7)
-    // .attr("height", 7)
-    // .attr("x", function(d) { return  xValue(d);})
-    // .attr("y", function(d) { return yValue(d);})
     .attr("cx", function(d) { return  xValue(d);})
     .attr("cy", function(d) { return yValue(d);})
     .attr("class", function(d) { return classByShot(d);})

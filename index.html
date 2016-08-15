@@ -204,8 +204,12 @@
     <button class="btn-dflt btn-zoom" id="toggleColoredShotChart">Show shot zone areas</button>
     <button class="btn-dflt btn-zoom" id="toggleMadeShots">Hide missed shots</button>
     </div>
+    <div id="topJointPlot">
+    </div>
       <div style="display: inline-block">
         <div id="chart"> </div>
+        <div id="rightJointPlot">
+        </div>
         <div id="shotAreasLabels" class="shot-labels">Labels Here
           <!-- <ul>
             <li>Above the Break 3</li>
@@ -346,14 +350,24 @@
     
 
     //found correct range by hand..varies with svg
-    var xScale = d3.scale.linear()
+    // var xScale = d3.scale.linear()
+    // .domain([-250, 250])
+    // //.range([42, 738]);
+    // .range([0, 780]);
+
+    // var yScale = d3.scale.linear()
+    // .domain([-1,0, -150])
+    // .range([590,589, 371]);
+
+
+   var xScale = d3.scale.linear()
     .domain([-250, 250])
     //.range([42, 738]);
     .range([0, 780]);
 
     var yScale = d3.scale.linear()
-    .domain([-1,0, -150])
-    .range([590,589, 371]);
+    .domain([-1, -150])
+    .range([590, 371]);
 
     var colorValue = function(d) {
 
@@ -383,16 +397,10 @@
   }
 
   /* Building histogram data */
-var AllX = [];
-var AllY = [];
 for (var k = 0; k < playerData.length; k++) {
   var cord = [];
   cord.push(xValue(playerData[k]));
   cord.push(yValue(playerData[k]));
-  AllX.push(xValue(playerData[k]));
-  AllY.push(yValue(playerData[k]));
-  //cord.push(playerData[k][17]);
-  //cord.push(playerData[k][18]);
   histogramData.push(cord);
 }
 console.log(histogramData);
@@ -450,19 +458,22 @@ console.log(histogramData);
         left: 0
       },
       width = 940 - margin.left - margin.right,
-      height = 720 - margin.top - margin.bottom;
+      height = 550 - margin.top - margin.bottom; // 770 works
 
-    var svg1 = d3.select("body").append("svg")
+
+    var svgTop = d3.select("#topJointPlot").html("");
+
+    svgTop = d3.select("#topJointPlot").append("svg")
       .attr("width", width + margin.left + margin.right)
-      .attr("height", height + margin.top + margin.bottom)
+      .attr("height", margin.top);
 
       var x = d3.scale.linear().range([0, width]).domain([0, 780]),
       y = d3.scale.linear().range([0, height]).domain([371, 590]);
 
     // top histogram
-    var gTop = svg1.append("g")
+    var gTop = svgTop.append("g")
       .attr("transform",
-        "translate(" + margin.left + "," + 0 + ")");
+        "translate(" + 76 + "," + 0 + ")"); // check this 80
 
     var xBins = d3.layout.histogram()
       .range(x.domain())
@@ -494,65 +505,70 @@ console.log(histogramData);
       })
       .style("fill", "steelblue");
 
-    xBar.append("text")
-      .attr("dy", ".75em")
-      .attr("y", 2)
-      .attr("x", bWidth / 2)
-      .attr("text-anchor", "middle")
-      .text(function(d) {
-        return d.length < 4 ? "" : d.length;
-      })
-      .style("fill", "white")
-      .style("font", "9px sans-serif");
+    // xBar.append("text")
+    //   .attr("dy", ".75em")
+    //   .attr("y", 2)
+    //   .attr("x", bWidth / 2)
+    //   .attr("text-anchor", "middle")
+    //   .text(function(d) {
+    //     return d.length < 4 ? "" : d.length;
+    //   })
+    //   .style("fill", "white")
+    //   .style("font", "9px sans-serif");
 
-    // right histogram
-    var gRight = svg1.append("g")
-      .attr("transform",
-        "translate(" + (margin.left + width) + "," + margin.top + ")");
+    // // right histogram
 
-    var yBins = d3.layout.histogram()
-      .range(y.domain())
-      .bins(y.ticks(15))
-      .value(function(d) {
-        return d[1];
-      })(histogramData);
+    // var svgRight = d3.select("#rightJointPlot").append("svg")
+    //   .attr("width", margin.right);
+    //   // .attr("height", margin.top);
 
-    console.log(yBins);
+    // var gRight = svgRight.append("g")
+    //   .attr("transform",
+    //     "translate(" + 0 + "," + margin.top + ")");
 
-    var yx = d3.scale.linear()
-      .domain([0, d3.max(yBins, function(d) {
-        return d.length;
-      })])
-      .range([0, margin.right]);
+    // var yBins = d3.layout.histogram()
+    //   .range(y.domain())
+    //   .bins(y.ticks(15))
+    //   .value(function(d) {
+    //     return d[1];
+    //   })(histogramData);
 
-    var yBar = gRight.selectAll(".bar")
-      .data(yBins)
-      .enter().append("g")
-      .attr("class", "bar")
-      .attr("transform", function(d) {
-        return "translate(" + 0 + "," + y(d.x + d.dx) + ")";
-      });
+    // console.log(yBins);
 
-    yBar.append("rect")
-      .attr("y", 1)
-      .attr("width", function(d) {
-        return yx(d.length);
-      })
-      .attr("height", bWidth)
-      .style("fill", "steelblue");
+    // var yx = d3.scale.linear()
+    //   .domain([0, d3.max(yBins, function(d) {
+    //     return d.length;
+    //   })])
+    //   .range([0, margin.right]);
 
-    yBar.append("text")
-      .attr("dx", "-.75em")
-      .attr("y", bWidth / 2 + 1)
-      .attr("x", function(d) {
-        return yx(d.length);
-      })
-      .attr("text-anchor", "middle")
-      .text(function(d) {
-        return d.length < 4 ? "" : d.length;
-      })
-      .style("fill", "white")
-      .style("font", "9px sans-serif");
+    // var yBar = gRight.selectAll(".bar")
+    //   .data(yBins)
+    //   .enter().append("g")
+    //   .attr("class", "bar")
+    //   .attr("transform", function(d) {
+    //     return "translate(" + 0 + "," + y(d.x + d.dx) + ")";
+    //   });
+
+    // yBar.append("rect")
+    //   .attr("y", 1)
+    //   .attr("width", function(d) {
+    //     return yx(d.length);
+    //   })
+    //   .attr("height", bWidth / 1.5) // was bWidth
+    //   .style("fill", "steelblue");
+
+    // yBar.append("text")
+    //   .attr("dx", "-.75em")
+    //   .attr("y", bWidth / 2 + 1)
+    //   .attr("x", function(d) {
+    //     return yx(d.length);
+    //   })
+    //   .attr("text-anchor", "middle")
+    //   .text(function(d) {
+    //     return d.length < 4 ? "" : d.length;
+    //   })
+    //   .style("fill", "white")
+    //   .style("font", "9px sans-serif");
 
     return svg;
   

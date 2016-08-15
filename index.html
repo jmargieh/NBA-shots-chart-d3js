@@ -63,6 +63,15 @@
   display: inline-block;
 }
 
+#hexBinsChart {
+  display:none;
+}
+
+.hexagon {
+  fill: none;
+  stroke: #000;
+  stroke-width: .5px;
+}
 
 /*#shotAreasLabels { 
   display: inline-block;
@@ -82,6 +91,18 @@
 
 #toggleMadeShots:disabled {
   background: #ccc; 
+  cursor: none;
+  pointer-events:none;
+}
+
+#toggleColoredShotChart:disabled {
+  background: #ccc; 
+  cursor: none;
+  pointer-events:none;
+}
+
+#toggleHexBinsChart:disabled {
+    background: #ccc; 
   cursor: none;
   pointer-events:none;
 }
@@ -208,12 +229,13 @@
     <div>
     <button class="btn-dflt btn-zoom" id="toggleColoredShotChart">Show shot zone areas</button>
     <button class="btn-dflt btn-zoom" id="toggleMadeShots">Hide missed shots</button>
+    <button class="btn-dflt btn-zoom" id="toggleHexBinsChart">Show HaxBins chart</button>
     </div>
     <div id="topJointPlot">
     </div>
       <div style="display: inline-block; margin-left: 120px;">
         <div id="chart"> </div>
-
+        <div id="hexBinsChart"> </div>
         <div id="rightJointPlot" style="float: right;">
         </div>
       </div>
@@ -346,14 +368,14 @@
     
 
     //found correct range by hand..varies with svg
-    // var xScale = d3.scale.linear()
-    // .domain([-250, 250])
-    // //.range([42, 738]);
-    // .range([0, 780]);
+    var xScale = d3.scale.linear()
+    .domain([-250, 250])
+    //.range([42, 738]);
+    .range([0, 780]);
 
-    // var yScale = d3.scale.linear()
-    // .domain([-1,0, -150])
-    // .range([590,589, 371]);
+    var yScale = d3.scale.linear()
+    .domain([-1,0, -150])
+    .range([590,589, 371]);
 
 
    var xScale = d3.scale.linear()
@@ -449,9 +471,118 @@ console.log(histogramData);
   loadTopHistogram();
   loadRightHistogram();
 
+  buildHexbinsChart()
+
     return svg;
   
   }
+
+
+function buildHexbinsChart() {
+
+    var data = globalData['resultSets'][0]['rowSet'];
+
+    var margin = {top: 20, right: 20, bottom: 30, left: 40},
+    width = 780 - margin.left - margin.right,
+    height = 900 - margin.top - margin.bottom;
+
+    //found correct range by hand..varies with svg
+    var xScale = d3.scale.linear()
+    .domain([-250, 250])
+    //.range([42, 738]);
+    .range([0, 780]);
+
+    var yScale = d3.scale.linear()
+    .domain([-1,0, -150])
+    .range([590,589, 371]);
+
+  var xValue = function(d) {
+    return xScale(-d[17]);
+  }
+
+  var yValue = function(d) {
+    return (d[16] > 45 ? 0 : yScale(-d[18]));
+  }
+
+    var max = { x: 780, y: 650};
+
+    var courtUrl = "css/images/court-bg-mod.jpg";
+
+var binsData = [];
+
+  /* Building histogram data */
+for (var k = 0; k < data.length; k++) {
+  var cord = [];
+  cord.push(xValue(data[k]));
+  cord.push(yValue(data[k]));
+  binsData.push(cord);
+}
+console.log(binsData);
+/* Building histogram data */
+
+var color = d3.scale.linear()
+    .domain([0, 20])
+    //.range(["white", "steelblue"])
+    .range(["white", "steelblue"])
+    .interpolate(d3.interpolateLab);
+
+var hexbin = d3.hexbin()
+    .size([width, height])
+    .radius(10);
+
+var x = d3.scale.identity()
+    .domain([0, width]);
+
+var y = d3.scale.linear()
+    .domain([0, height])
+    .range([height, 0]);
+
+
+var svg = d3.select("#hexBinsChart").html("");
+    svg = d3.select("#hexBinsChart").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g");
+    //.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+    svg.append("svg:defs")
+    .append("svg:pattern")
+    .attr("id", "bg-hex")
+    .attr('patternUnits', 'userSpaceOnUse')
+    .attr("width", max.x)
+    .attr("height", max.y)
+    .append("svg:image")
+    .attr("id","image-url")
+    .attr("xlink:href", courtUrl)
+    .attr("width", max.x)
+    .attr("height", max.y);
+
+    svg.append("rect")
+    .attr("x", "0")
+    .attr("y", "0")
+    .attr("width", max.x)
+    .attr("height", max.y)
+    .attr("fill", "url(#bg-hex)");
+
+svg.append("clipPath")
+    .attr("id", "clip")
+  .append("rect")
+    .attr("class", "mesh")
+    .attr("width", width)
+    .attr("height", height);
+
+svg.append("g")
+    .attr("clip-path", "url(#clip)")
+  .selectAll(".hexagon")
+    .data(hexbin(binsData))
+  .enter().append("path")
+    .attr("class", "hexagon")
+    .attr("d", hexbin.hexagon())
+    .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; })
+    .style("fill", function(d) { return color(d.length); });
+
+
+}
 
 ////*/*/*/*/*///// D3.JS ////*/*/*/*/*/////
 
@@ -658,10 +789,23 @@ function loadRightHistogram() {
         success: function(response) {
           // load playerVisual and assign to chartSVG global variable
           chartSVG = loadVisual(response);
+
+          //reset buttons
           $( "#toggleColoredShotChart" ).html("Show shot zone areas");
+          $( "#toggleColoredShotChart" ).prop("disabled",false);
+
           $("#toggleMadeShots").prop("disabled",false);
           $( "#toggleMadeShots" ).html("Hide missed shots");
-          globalData = response;
+
+          $("#toggleHexBinsChart").html("Show HaxBins chart");
+          $("#toggleHexBinsChart").prop("disabled",false);
+
+          $('#hexBinsChart').hide();
+          $('#chart').css("display", "inline-block");
+
+          histogramData = []; // reset histogram data
+
+          globalData = response; // set golbalData
         }
     });
 
@@ -881,13 +1025,35 @@ function fillCharts(stats){
 }
 
 
+$( "#toggleHexBinsChart" ).click(function() {
+  if ($(this).text() === "Show HaxBins chart") {
+    $('#chart').hide();
+    $('#hexBinsChart').css("display", "inline-block");
+    $(this).html("Hide HaxBins chart");
+    $("#toggleMadeShots" ).html("Hide missed shots");
+    $("#toggleMadeShots").prop("disabled",true);
+    $("#toggleColoredShotChart" ).html("Show shot zone areas");
+    $("#toggleColoredShotChart").prop("disabled",true);
+  } else {
+    $('#hexBinsChart').hide();
+    $('#chart').css("display", "inline-block");
+    $(this).html("Show HaxBins chart");
+    $("#toggleMadeShots" ).html("Hide missed shots");
+    $("#toggleMadeShots").prop("disabled",false);
+    $("#toggleColoredShotChart" ).html("Show shot zone areas");
+    $("#toggleColoredShotChart").prop("disabled",false);
+    $('.dot').show(2000);
+  }
+
+});
+
 $( "#toggleColoredShotChart" ).click(function() {
       if ($("#image-url").attr("href") === "css/images/court-bg-mod.jpg") {
         $("#image-url").attr("href","css/images/court-bg-mod-color.jpg");
         $(this).html("Hide shot zone areas");
         $('.dot').hide(2000);
         $("#toggleMadeShots").prop("disabled",true);
-        //$('#shotAreasLabels').show();
+        $("#toggleHexBinsChart").prop("disabled",true);
         var chartSVG = loadShotsCharts(globalData);
       } else {
         $("#image-url").attr("href","css/images/court-bg-mod.jpg");
@@ -895,6 +1061,7 @@ $( "#toggleColoredShotChart" ).click(function() {
         $('.dot').show(2000);
         $("#toggleMadeShots" ).html("Hide missed shots");
         $("#toggleMadeShots").prop("disabled",false);
+        $("#toggleHexBinsChart").prop("disabled",false);
         //$('#shotAreasLabels').hide();
       }
       

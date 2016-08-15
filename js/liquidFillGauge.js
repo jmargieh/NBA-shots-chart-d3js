@@ -26,18 +26,25 @@ function liquidFillGaugeDefaultSettings(){
         valueCountUp: true, // If true, the displayed value counts up from 0 to it's final value upon loading. If false, the final value is displayed.
         displayPercent: true, // If true, a % symbol is displayed after the value.
         textColor: "#045681", // The color of the value text when the wave does not overlap it.
-        waveTextColor: "#A4DBf8" // The color of the value text when the wave overlaps it.
+        waveTextColor: "#A4DBf8",// The color of the value text when the wave overlaps it.
+        locationX: 0,
+        locationY: 0,
+        dotLocationx: 0,
+        dotLocationY: 0
     };
 }
 
 function loadLiquidFillGauge(elementId, value, config) {
     if(config == null) config = liquidFillGaugeDefaultSettings();
-
-    var gauge = d3.select("#" + elementId);
-    var radius = Math.min(parseInt(gauge.style("width")), parseInt(gauge.style("height")))/2;
-    var locationX = parseInt(gauge.style("width"))/2 - radius;
-    var locationY = parseInt(gauge.style("height"))/2 - radius;
+    var width = 70;
+    var height = 70;
+    var gauge = d3.select("#shotchart").append("svg:svg");
+    var radius = Math.min(parseInt(width), parseInt(height))/2;
+    var locationX = config.locationX;
+    var locationY = config.locationY;
     var fillPercent = Math.max(config.minValue, Math.min(config.maxValue, value))/config.maxValue;
+
+
 
     var waveHeightScale;
     if(config.waveHeightScaling){
@@ -106,6 +113,14 @@ function loadLiquidFillGauge(elementId, value, config) {
     // Center the gauge within the parent SVG.
     var gaugeGroup = gauge.append("g")
         .attr('transform','translate('+locationX+','+locationY+')');
+
+    //Draw Shot Location Circle.
+    var gaugeDot = gauge.append("g")
+        .append("svg:circle")
+        .attr("r", 10)
+        .attr("cx", function(d) { return  config.dotLocationX ;})
+        .attr("cy", function(d) { return config.dotLocationY;})
+        .style("fill", function(d) { return config.circleColor;})
 
     // Draw the outer circle.
     var gaugeCircleArc = d3.svg.arc()

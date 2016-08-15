@@ -55,6 +55,10 @@
   fill-opacity: .75;
 }
 
+.gauge{
+  opacity: 1;
+}
+
 #chart {
   display: inline-block;
 }
@@ -208,6 +212,7 @@
     </div>
       <div style="display: inline-block">
         <div id="chart"> </div>
+
         <div id="rightJointPlot">
         </div>
         <div id="shotAreasLabels" class="shot-labels">Labels Here
@@ -799,7 +804,7 @@ function loadShotsCharts(globalData){
     arr.push(shotArea_jsonObject);
     }
     
-    /*console.log(arr);*/
+    console.log(arr);
     
     fillCharts(arr);
 }
@@ -807,11 +812,65 @@ function loadShotsCharts(globalData){
 
 function fillCharts(stats){
 
-   
-
-    var gauge1 = loadLiquidFillGauge("fillgauge1", stats[0][5]);
+    /* Above The Break 3*/
     var config1 = liquidFillGaugeDefaultSettings();
+    config1.circleColor = "#FF7777";
+    config1.waveColor = "#FF7777";
+    config1.locationX = 350;
+    config1.locationY = 185;
+    config1.dotLocationX = 370;
+    config1.dotLocationY = 285
+    var gauge1 = loadLiquidFillGauge("gauge", stats[0].FG_PCT * 100 , config1);
     
+    /* In The Paint*/
+    var config2 = liquidFillGaugeDefaultSettings();
+    config2.circleColor = "#D4AB6A";
+    config2.waveColor = "#D4AB6A";
+    config2.locationX = 350;
+    config2.locationY = 420;
+    config2.dotLocationX = 370;
+    config2.dotLocationY = 500;
+    var gauge2 = loadLiquidFillGauge("gauge", stats[1].FG_PCT * 100 , config2);
+
+    /* Left Corner 3*/
+    var config3 = liquidFillGaugeDefaultSettings();
+    config3.circleColor = "#808015";
+    config3.waveColor = "#808015";
+    config3.locationX = 650;
+    config3.locationY = 520;
+    config3.dotLocationX = 745;
+    config3.dotLocationY = 550;
+    var gauge3 = loadLiquidFillGauge("gauge", stats[2].FG_PCT * 100 , config3);
+
+     /*Mid Range*/
+    var config4 = liquidFillGaugeDefaultSettings();
+    config4.circleColor = "#6DA398";
+    config4.waveColor = "#6DA398";
+    config4.locationX = 350;
+    config4.locationY = 320;
+    config4.dotLocationX = 425;
+    config4.dotLocationY = 402;
+    var gauge4 = loadLiquidFillGauge("gauge", stats[3].FG_PCT * 100 , config4);
+
+     /*Ristricted Area*/
+    var config5 = liquidFillGaugeDefaultSettings();
+    config5.circleColor = "#246D5F";
+    config5.waveColor = "#246D5F";
+    config5.locationX = 430;
+    config5.locationY = 520;
+    config5.dotLocationX = 410;
+    config5.dotLocationY = 545;
+    var gauge5 = loadLiquidFillGauge("gauge", stats[4].FG_PCT * 100 , config5);
+
+     /*Right Corner 3 */
+    var config6 = liquidFillGaugeDefaultSettings();
+    config6.circleColor = "#FF4444";
+    config6.waveColor = "#FF4444";
+    config6.locationX = 55;
+    config6.locationY = 520;
+    config6.dotLocationX = 30;
+    config6.dotLocationY = 550;
+    var gauge6 = loadLiquidFillGauge("gauge", stats[5].FG_PCT * 100 , config6);
 }
 
 

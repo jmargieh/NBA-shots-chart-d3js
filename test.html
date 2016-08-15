@@ -52,16 +52,6 @@
     var x = d3.scale.linear().range([0, width]).domain([0, 10]),
       y = d3.scale.linear().range([height, 0]).domain([0, 10]);
 
-    // Add the X Axis
-    g.append("g")
-      .attr("class", "axis")
-      .attr("transform", "translate(0," + height + ")")
-      .call(d3.svg.axis().orient("bottom").scale(x));
-
-    // Add the Y Axis
-    g.append("g")
-      .attr("class", "axis")
-      .call(d3.svg.axis().orient("left").scale(y));
 
     var random = d3.random.normal(0, 1.2),
       data = d3.range(100).map(function() {
@@ -85,9 +75,9 @@
       .style("stroke", "lightgray");
 
     // top histogram
-    var gTop = svg.append("g")
-      .attr("transform",
-        "translate(" + margin.left + "," + 0 + ")");
+    // var gTop = svg.append("g")
+    //   .attr("transform",
+    //     "translate(" + margin.left + "," + 0 + ")");
 
     var xBins = d3.layout.histogram()
       .range(x.domain())
@@ -102,33 +92,33 @@
       })])
       .range([margin.top, 0]);
 
-    var xBar = gTop.selectAll(".bar")
-      .data(xBins)
-      .enter().append("g")
-      .attr("class", "bar")
-      .attr("transform", function(d) {
-        return "translate(" + x(d.x) + "," + xy(d.length) + ")";
-      });
+    // var xBar = gTop.selectAll(".bar")
+    //   .data(xBins)
+    //   .enter().append("g")
+    //   .attr("class", "bar")
+    //   .attr("transform", function(d) {
+    //     return "translate(" + x(d.x) + "," + xy(d.length) + ")";
+    //   });
 
     var bWidth = x(xBins[0].dx) - 1;
-    xBar.append("rect")
-      .attr("x", 1)
-      .attr("width", bWidth)
-      .attr("height", function(d) {
-        return margin.top - xy(d.length);
-      })
-      .style("fill", "steelblue");
+    // xBar.append("rect")
+    //   .attr("x", 1)
+    //   .attr("width", bWidth)
+    //   .attr("height", function(d) {
+    //     return margin.top - xy(d.length);
+    //   })
+    //   .style("fill", "steelblue");
 
-    xBar.append("text")
-      .attr("dy", ".75em")
-      .attr("y", 2)
-      .attr("x", bWidth / 2)
-      .attr("text-anchor", "middle")
-      .text(function(d) {
-        return d.length < 4 ? "" : d.length;
-      })
-      .style("fill", "white")
-      .style("font", "9px sans-serif");
+    // xBar.append("text")
+    //   .attr("dy", ".75em")
+    //   .attr("y", 2)
+    //   .attr("x", bWidth / 2)
+    //   .attr("text-anchor", "middle")
+    //   .text(function(d) {
+    //     return d.length < 4 ? "" : d.length;
+    //   })
+    //   .style("fill", "white")
+    //   .style("font", "9px sans-serif");
 
     // right histogram
     var gRight = svg.append("g")
@@ -166,18 +156,18 @@
       .attr("height", bWidth)
       .style("fill", "steelblue");
 
-    yBar.append("text")
-      .attr("dx", "-.75em")
-      .attr("y", bWidth / 2 + 1)
-      .attr("x", function(d) {
-        return yx(d.length);
-      })
-      .attr("text-anchor", "middle")
-      .text(function(d) {
-        return d.length < 4 ? "" : d.length;
-      })
-      .style("fill", "white")
-      .style("font", "9px sans-serif");
+    // yBar.append("text")
+    //   .attr("dx", "-.75em")
+    //   .attr("y", bWidth / 2 + 1)
+    //   .attr("x", function(d) {
+    //     return yx(d.length);
+    //   })
+    //   .attr("text-anchor", "middle")
+    //   .text(function(d) {
+    //     return d.length < 4 ? "" : d.length;
+    //   })
+    //   .style("fill", "white")
+    //   .style("font", "9px sans-serif");
   </script>
 </body>
 

@@ -64,11 +64,11 @@
 }
 
 
-#shotAreasLabels { 
+/*#shotAreasLabels { 
   display: inline-block;
   float: right;
   display: none;
-}
+}*/
 
 .liquidFillGaugeText { 
   font-family: Helvetica; 
@@ -98,7 +98,8 @@
 			<div class="container">
 				<div class="col-12">
 				  <div class="col-2">
-					<div class="logo"><img style="height:50px" src="css/images/logo.png" alt=""></div>
+					<!--<div class="logo"><img style="height:50px" src="css/images/logo.png" alt=""></div>-->
+          NBA shot chart viz.
 				  </div>
 					<nav id="top-menu">
 						<ul class="clearfix">
@@ -210,21 +211,11 @@
     </div>
     <div id="topJointPlot">
     </div>
-      <div style="display: inline-block">
+      <div style="display: inline-block; margin-left: 120px;">
         <div id="chart"> </div>
 
-        <div id="rightJointPlot">
+        <div id="rightJointPlot" style="float: right;">
         </div>
-        <div id="shotAreasLabels" class="shot-labels">Labels Here
-          <!-- <ul>
-            <li>Above the Break 3</li>
-            <li>In The Paint (Non-RA)</li>
-            <li>Left Corner 3</li>
-            <li>Mid-Range</li>
-            <li>Restricted Area</li>
-            <li>Right Corner 3</li>
-          </ul> -->
-          </div>
       </div>
   </div>
 </section>
@@ -455,15 +446,24 @@ console.log(histogramData);
         }
     });
 
+  loadTopHistogram();
+  loadRightHistogram();
 
-    var margin = {
+    return svg;
+  
+  }
+
+////*/*/*/*/*///// D3.JS ////*/*/*/*/*/////
+
+function loadTopHistogram() {
+      var margin = {
         top: 120,
         right: 120,
         bottom: 20,
         left: 0
       },
-      width = 940 - margin.left - margin.right,
-      height = 550 - margin.top - margin.bottom; // 770 works
+      width = 900 - margin.left - margin.right,
+      height = 580 - margin.top - margin.bottom; // 770 works
 
 
     var svgTop = d3.select("#topJointPlot").html("");
@@ -478,11 +478,11 @@ console.log(histogramData);
     // top histogram
     var gTop = svgTop.append("g")
       .attr("transform",
-        "translate(" + 76 + "," + 0 + ")"); // check this 80
+        "translate(" + 50 + "," + 0 + ")"); // check this 80
 
     var xBins = d3.layout.histogram()
       .range(x.domain())
-      .bins(x.ticks(15))
+      .bins(x.ticks(50))
       .value(function(d) {
         return d[0];
       })(histogramData);
@@ -509,77 +509,84 @@ console.log(histogramData);
         return margin.top - xy(d.length);
       })
       .style("fill", "steelblue");
+}
 
-    // xBar.append("text")
-    //   .attr("dy", ".75em")
-    //   .attr("y", 2)
-    //   .attr("x", bWidth / 2)
-    //   .attr("text-anchor", "middle")
-    //   .text(function(d) {
-    //     return d.length < 4 ? "" : d.length;
-    //   })
-    //   .style("fill", "white")
-    //   .style("font", "9px sans-serif");
+function loadRightHistogram() {
 
-    // // right histogram
+ // set the dimensions and margins of the graph
+      var margin = {
+        top: 140,
+        right: 120,
+        bottom: 20,
+        left: 0
+      },
+      width = 400 - margin.left - margin.right,
+      height = 600 - margin.top - margin.bottom;
 
-    // var svgRight = d3.select("#rightJointPlot").append("svg")
-    //   .attr("width", margin.right);
-    //   // .attr("height", margin.top);
+    var svgRight = d3.select("#rightJointPlot").html("");
 
-    // var gRight = svgRight.append("g")
-    //   .attr("transform",
-    //     "translate(" + 0 + "," + margin.top + ")");
+      svgRight = d3.select("#rightJointPlot").append("svg")
+      .attr("width", margin.right)
+      .attr("height", height + margin.top + margin.bottom)
 
-    // var yBins = d3.layout.histogram()
-    //   .range(y.domain())
-    //   .bins(y.ticks(15))
-    //   .value(function(d) {
-    //     return d[1];
-    //   })(histogramData);
 
-    // console.log(yBins);
+      var x = d3.scale.linear().range([0, width]).domain([0, 780]),
+      y = d3.scale.linear().range([0, height]).domain([371, 590]);
 
-    // var yx = d3.scale.linear()
-    //   .domain([0, d3.max(yBins, function(d) {
-    //     return d.length;
-    //   })])
-    //   .range([0, margin.right]);
 
-    // var yBar = gRight.selectAll(".bar")
-    //   .data(yBins)
-    //   .enter().append("g")
-    //   .attr("class", "bar")
-    //   .attr("transform", function(d) {
-    //     return "translate(" + 0 + "," + y(d.x + d.dx) + ")";
-    //   });
+    var xBins = d3.layout.histogram()
+      .range(x.domain())
+      .bins(x.ticks(10))
+      .value(function(d) {
+        return d[0];
+      })(histogramData);
 
-    // yBar.append("rect")
-    //   .attr("y", 1)
-    //   .attr("width", function(d) {
-    //     return yx(d.length);
-    //   })
-    //   .attr("height", bWidth / 1.5) // was bWidth
-    //   .style("fill", "steelblue");
+    var xy = d3.scale.linear()
+      .domain([0, d3.max(xBins, function(d) {
+        return d.length;
+      })])
+      .range([margin.top, 0]);
 
-    // yBar.append("text")
-    //   .attr("dx", "-.75em")
-    //   .attr("y", bWidth / 2 + 1)
-    //   .attr("x", function(d) {
-    //     return yx(d.length);
-    //   })
-    //   .attr("text-anchor", "middle")
-    //   .text(function(d) {
-    //     return d.length < 4 ? "" : d.length;
-    //   })
-    //   .style("fill", "white")
-    //   .style("font", "9px sans-serif");
+    var bWidth = x(xBins[0].dx) - 1;
 
-    return svg;
-  
-  }
+    // right histogram
+    var gRight = svgRight.append("g")
+      .attr("transform",
+        "translate( 0 ," + margin.top + ")");
 
-////*/*/*/*/*///// D3.JS ////*/*/*/*/*/////
+    var yBins = d3.layout.histogram()
+      .range(y.domain())
+      .bins(y.ticks(15))
+      .value(function(d) {
+        return d[1];
+      })(histogramData);
+
+    console.log(yBins);
+
+    var yx = d3.scale.linear()
+      .domain([0, d3.max(yBins, function(d) {
+        return d.length;
+      })])
+      .range([0, margin.right]);
+
+    var yBar = gRight.selectAll(".bar")
+      .data(yBins)
+      .enter().append("g")
+      .attr("class", "bar")
+      .attr("transform", function(d) {
+        return "translate(" + 0 + "," + y(d.x + d.dx) + ")";
+      });
+
+    yBar.append("rect")
+      .attr("y", 1)
+      .attr("width", function(d) {
+        return yx(d.length);
+      })
+      .attr("height", bWidth)
+      .style("fill", "steelblue");
+
+
+}
 
 
     var teams = {
@@ -880,7 +887,7 @@ $( "#toggleColoredShotChart" ).click(function() {
         $(this).html("Hide shot zone areas");
         $('.dot').hide(2000);
         $("#toggleMadeShots").prop("disabled",true);
-        $('#shotAreasLabels').show();
+        //$('#shotAreasLabels').show();
         var chartSVG = loadShotsCharts(globalData);
       } else {
         $("#image-url").attr("href","css/images/court-bg-mod.jpg");
@@ -888,7 +895,7 @@ $( "#toggleColoredShotChart" ).click(function() {
         $('.dot').show(2000);
         $("#toggleMadeShots" ).html("Hide missed shots");
         $("#toggleMadeShots").prop("disabled",false);
-        $('#shotAreasLabels').hide();
+        //$('#shotAreasLabels').hide();
       }
       
 });

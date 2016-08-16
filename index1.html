@@ -73,19 +73,64 @@
   stroke-width: .5px;
 }
 
-/*#shotAreasLabels { 
+#ShotAreaLabels { 
   display: inline-block;
-  float: right;
+  text-align: center;
+  margin-left: 17.2%;
+  margin-top: 10px;
+}
+
+
+#ShotAreaLabels > ul > li{
+  display: block;
+  float: left;
+  margin: 10px;  
+}
+
+#shotZoneChart{
   display: none;
-}*/
+}
+
+.salmon{
+  background-color: #FF7777;   
+}
+
+.apache{
+  background-color: #D4AB6A;
+}
+
+.citron{
+  background-color: #808015;
+}
+
+.acapulco{
+  background-color: #6DA398;
+}
+
+.eden{
+  background-color: #246D5F;
+}
+
+.coralRed{
+  background-color: #FF4444;
+}
+
+.circleLabel {
+    display: inline-block;
+    content: " ";
+    height: 25px;
+    width: 25px;
+    float:left;
+    -moz-border-radius: 30px; /* or 50% */
+    border-radius: 30px; /* or 50% */
+    margin: 4px 0px 0px 1px;
+
+}
+
 
 .liquidFillGaugeText { 
   font-family: Helvetica; 
   font-weight: bold; 
-}
-
-.shot-labes ul {
-  list-style: none;
 }
 
 
@@ -102,7 +147,7 @@
 }
 
 #toggleHexBinsChart:disabled {
-    background: #ccc; 
+  background: #ccc; 
   cursor: none;
   pointer-events:none;
 }
@@ -221,11 +266,11 @@
     </div>
 	</section>
 <section style="text-align: center">
-    <!--<div>
+    <div>
     <button class="btn-dflt btn-zoom zoomOp" id="zoom_in">+</button>
     <button class ="btn-dflt btn-zoom zoomOp" id="zoom_reset">Reset</button>
     <button class="btn-dflt btn-zoom zoomOp" id="zoom_out">-</button>
-    </div> -->
+    </div>
     <div>
     <button class="btn-dflt btn-zoom" id="toggleColoredShotChart">Show shot zone areas</button>
     <button class="btn-dflt btn-zoom" id="toggleMadeShots">Hide missed shots</button>
@@ -234,12 +279,26 @@
     <div id="topJointPlot">
     </div>
       <div style="display: inline-block; margin-left: 120px;">
-        <div id="chart"> </div>
-        <div id="hexBinsChart"> </div>
+        <div id="chart"> 
         </div>
-      </div>
+        <div id="hexBinsChart"> </div>
+        <div id="rightJointPlot" style="float: right;">
+        </div>
+      </div> 
   </div>
 </section>
+  
+  <div id="ShotAreaLabels">
+        <ul id="shotZoneChart">
+          <span class="circleLabel salmon"></span><li>Above the Break 3</li>
+          <span class="circleLabel apache"></span><li>In The Paint (Non-RA)</li>
+          <span class="circleLabel citron"></span><li>Left Corner 3</li>
+          <span class="circleLabel acapulco"></span><li>Mid-Range</li>
+          <span class="circleLabel eden"></span><li>Restricted Area</li>
+          <span class="circleLabel coralRed"></span><li>Right Corner 3</li>
+        </ul>
+  </div>
+
 
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
   <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
@@ -329,110 +388,110 @@
 
   function loadVisual(playerData) {
 
+    var max = { x: 780, y: 650};
+    var svg = d3.select("#chart").html("");
+    svg = d3.select("#chart").append("svg:svg")
+    .attr("width", max.x)
+    //.attr("height", max.y + 500)
+    //.attr("width", max.x
+    .attr("height", max.y)
+    .attr("background-color", "#122737")
+    .append("g")
+    .call(zoom)
+    .append("g")
+    .attr("id", "shotchart");
+
+    var courtUrl = "css/images/court-bg-mod.jpg";
+    svg.append("svg:defs")
+    .append("svg:pattern")
+    .attr("id", "bg")
+    .attr('patternUnits', 'userSpaceOnUse')
+    .attr("width", max.x)
+    .attr("height", max.y)
+    .append("svg:image")
+    .attr("id","image-url")
+    .attr("xlink:href", courtUrl)
+    .attr("width", max.x)
+    .attr("height", max.y);
+
+    svg.append("rect")
+    .attr("x", "0")
+    .attr("y", "0")
+    .attr("width", max.x)
+    .attr("height", max.y)
+    .attr("fill", "url(#bg)");
+
+    playerData = playerData['resultSets'][0]['rowSet'];
+    //console.log(playerData);
     
-        var margins = {
-            left: 10,
-            right: 100,
-            top: 100,
-            bottom: 10
-          },
-          max_x = 780,
-          max_y = 650,
-          max = {
-            x: max_x,
-            y: max_y
-          }
 
-        var svg = d3.select("#chart").html("");
+    //found correct range by hand..varies with svg
+    var xScale = d3.scale.linear()
+    .domain([-250, 250])
+    //.range([42, 738]);
+    .range([0, 780]);
 
-        r_svg = d3.select("#chart").append("svg:svg")
-          .attr("width", max.x + margins.left + margins.right)
-          .attr("height", max.y + margins.left + margins.right)
-          .attr("background-color", "#122737");
-
-        var svg = r_svg.append("g")
-          .attr("transform", "translate(" + margins.left + "," + margins.top + ")")
-          .attr("id", "shotchart");
-
-        var courtUrl = "css/images/court-bg-mod.jpg";
-        svg.append("svg:defs")
-          .append("svg:pattern")
-          .attr("id", "bg")
-          .attr('patternUnits', 'userSpaceOnUse')
-          .attr("width", max.x)
-          .attr("height", max.y)
-          .append("svg:image")
-          .attr("id", "image-url")
-          .attr("xlink:href", courtUrl)
-          .attr("width", max.x)
-          .attr("height", max.y);
-
-        svg.append("rect")
-          .attr("x", "0")
-          .attr("y", "0")
-          .attr("width", max.x)
-          .attr("height", max.y)
-          .attr("fill", "url(#bg)");
-
-        playerData = playerData['resultSets'][0]['rowSet'];
-        //console.log(playerData);
+    var yScale = d3.scale.linear()
+    .domain([-1,0, -150])
+    .range([590,589, 371]);
 
 
-        //found correct range by hand..varies with svg
-        var xScale = d3.scale.linear()
-          .domain([-250, 250])
-          //.range([42, 738]);
-          .range([0, max.x]);
+   var xScale = d3.scale.linear()
+    .domain([-250, 250])
+    //.range([42, 738]);
+    .range([0, 780]);
 
-        var yScale = d3.scale.linear()
-          .domain([-1, 0, -150])
-          .range([max.y * 0.9076923076923077, max.y * 0.9061538461538462, max.y * 0.5707692307692308]);
+    var yScale = d3.scale.linear()
+    .domain([-1, -150])
+    .range([590, 371]);
 
-        var colorValue = function(d) {
+    var colorValue = function(d) {
 
-          if (d[10] === "Missed Shot") {
+        if(d[10] === "Missed Shot") {
             return "#e61212";
-          }
-          if (d[10] === "Made Shot") {
+        }
+        if(d[10] === "Made Shot") {
             return "#6ae916";
-          }
         }
+    }
 
-        var xValue = function(d) {
-          return xScale(-d[17]);
-        }
+  var xValue = function(d) {
+    return xScale(-d[17]);
+  }
 
-        var yValue = function(d) {
-          return (d[16] > 45 ? 0 : yScale(-d[18]));
-        }
+  var yValue = function(d) {
+    return (d[16] > 45 ? 0 : yScale(-d[18]));
+  }
 
-        var classByShot = function(d) {
-          if (d[10] === "Missed Shot") {
-            return "dot missed";
-          }
-          if (d[10] === "Made Shot") {
-            return "dot made";
-          }
-        }
+  var classByShot = function(d) {
+      if(d[10] === "Missed Shot") {
+          return "dot missed";
+      }
+      if(d[10] === "Made Shot") {
+          return "dot made";
+      }
+  }
 
-        d3.selectAll('dot').remove();
-        var node = svg.selectAll("dot").data(playerData)
-        node.enter()
-          .append("svg:circle")
-          .attr("r", 4)
-          .attr("cx", function(d) {
-            return xValue(d);
-          })
-          .attr("cy", function(d) {
-            return yValue(d);
-          })
-          .attr("class", function(d) {
-            return classByShot(d);
-          })
-          .style("fill", function(d) {
-            return colorValue(d);
-          })
-        .on("mouseover", function(d) {
+  /* Building histogram data */
+for (var k = 0; k < playerData.length; k++) {
+  var cord = [];
+  cord.push(xValue(playerData[k]));
+  cord.push(yValue(playerData[k]));
+  histogramData.push(cord);
+}
+console.log(histogramData);
+/* Building histogram data */
+
+    d3.selectAll('dot').remove();
+    var node = svg.selectAll("dot").data(playerData)
+    node.enter()
+    .append("svg:circle")
+    .attr("r", 4)
+    .attr("cx", function(d) { return  xValue(d);})
+    .attr("cy", function(d) { return yValue(d);})
+    .attr("class", function(d) { return classByShot(d);})
+    .style("fill", function(d) { return colorValue(d);})
+    .on("mouseover", function(d) {
         d3.select(this).style("stroke", '#000').style('stroke-opacity', '.8');
     })
     .on("mouseout", function(d) {
@@ -467,113 +526,12 @@
         }
     });
 
-        /* Building histogram data */
-        for (var k = 0; k < playerData.length; k++) {
-          var cord = [];
-          cord.push(xValue(playerData[k]));
-          cord.push(yValue(playerData[k]));
-          histogramData.push(cord);
-        }
+  loadTopHistogram();
+  loadRightHistogram();
 
-        // top histogram
-        var gTop = r_svg.append("g")
-          .attr("transform",
-            "translate(" + margins.left + "," + 0 + ")");
+  buildHexbinsChart(playerData)
 
-        var m = d3.max(histogramData, function(d) { return d[0] });
-        var xBins = d3.layout.histogram()
-          .range([0,m])
-          .bins(d3.range(0, m + 20, 20))
-          .value(function(d) {
-            return d[0];
-          })(histogramData);
-          
-        var xy = d3.scale.linear()
-          .domain([0, d3.max(xBins, function(d) {
-            return d.length;
-          })])
-          .range([margins.top, 0]);
-
-        var xBar = gTop.selectAll(".bar")
-          .data(xBins)
-          .enter().append("g")
-          .attr("class", "bar")
-          .attr("transform", function(d) {
-            return "translate(" + (d.x) + "," + xy(d.length) + ")";
-          });
-
-        var bWidth = xBins[0].dx - 1;
-        xBar.append("rect")
-          .attr("x", 1)
-          .attr("width", bWidth)
-          .attr("height", function(d) {
-            return margins.top - xy(d.length);
-          })
-          .style("fill", "steelblue");
-
-        xBar.append("text")
-          .attr("dy", ".75em")
-          .attr("y", 2)
-          .attr("x", bWidth / 2)
-          .attr("text-anchor", "middle")
-          .text(function(d) {
-            return d.length < 15 ? "" : d.length;
-          })
-          .style("fill", "white")
-          .style("font", "9px sans-serif");
-
-        // right histogram
-        var gRight = r_svg.append("g")
-          .attr("transform",
-            "translate(" + (margins.left + max.x) + "," + margins.top + ")");
-
-        var m = d3.max(histogramData, function(d) { return d[1] });
-        var yBins = d3.layout.histogram()
-          .range([0, m])
-          .bins(d3.range(0, m + 20, 20))
-          .value(function(d) {
-            return d[1];
-          })(histogramData);
-
-        var yx = d3.scale.linear()
-          .domain([0, d3.max(yBins, function(d) {
-            return d.length;
-          })])
-          .range([0, margins.right]);
-
-        var yBar = gRight.selectAll(".bar")
-          .data(yBins)
-          .enter().append("g")
-          .attr("class", "bar")
-          .attr("transform", function(d) {
-            return "translate(" + 0 + "," + (d.x) + ")";
-          });
-
-        yBar.append("rect")
-          .attr("y", 1)
-          .attr("width", function(d) {
-            return yx(d.length);
-          })
-          .attr("height", bWidth)
-          .style("fill", "steelblue");
-
-        yBar.append("text")
-          .attr("dx", "-.75em")
-          .attr("y", bWidth / 2 + 1)
-          .attr("x", function(d) {
-            return yx(d.length);
-          })
-          .attr("text-anchor", "middle")
-          .text(function(d) {
-            return d.length < 15 ? "" : d.length;
-          })
-          .style("fill", "white")
-          .style("font", "9px sans-serif");
-
-
-          buildHexbinsChart(playerData);
-
-          return svg;
+    return svg;
   
   }
 
@@ -642,8 +600,8 @@ var svg = d3.select("#hexBinsChart").html("");
     svg = d3.select("#hexBinsChart").append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
-  .append("g")
-    .attr("transform", "translate(" + 14 + "," + 100 + ")");
+  .append("g");
+    //.attr("transform", "translate(" + 50 + "," + 0+ ")");
 
     svg.append("svg:defs")
     .append("svg:pattern")
@@ -685,6 +643,139 @@ svg.append("g")
 }
 
 ////*/*/*/*/*///// D3.JS ////*/*/*/*/*/////
+
+function loadTopHistogram() {
+      var margin = {
+        top: 120,
+        right: 120,
+        bottom: 20,
+        left: 0
+      },
+      width = 900 - margin.left - margin.right,
+      height = 580 - margin.top - margin.bottom; // 770 works
+
+
+    var svgTop = d3.select("#topJointPlot").html("");
+
+    svgTop = d3.select("#topJointPlot").append("svg")
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", margin.top);
+
+      var x = d3.scale.linear().range([0, width]).domain([0, 780]),
+      y = d3.scale.linear().range([0, height]).domain([371, 590]);
+
+    // top histogram
+    var gTop = svgTop.append("g")
+      .attr("transform",
+        "translate(" + 50 + "," + 0 + ")"); // check this 80
+
+    var xBins = d3.layout.histogram()
+      .range(x.domain())
+      .bins(x.ticks(50))
+      .value(function(d) {
+        return d[0];
+      })(histogramData);
+
+    var xy = d3.scale.linear()
+      .domain([0, d3.max(xBins, function(d) {
+        return d.length;
+      })])
+      .range([margin.top, 0]);
+
+    var xBar = gTop.selectAll(".bar")
+      .data(xBins)
+      .enter().append("g")
+      .attr("class", "bar")
+      .attr("transform", function(d) {
+        return "translate(" + x(d.x) + "," + xy(d.length) + ")";
+      });
+
+    var bWidth = x(xBins[0].dx) - 1;
+    xBar.append("rect")
+      .attr("x", 1)
+      .attr("width", bWidth)
+      .attr("height", function(d) {
+        return margin.top - xy(d.length);
+      })
+      .style("fill", "steelblue");
+}
+
+function loadRightHistogram() {
+
+ // set the dimensions and margins of the graph
+      var margin = {
+        top: 140,
+        right: 120,
+        bottom: 20,
+        left: 0
+      },
+      width = 400 - margin.left - margin.right,
+      height = 600 - margin.top - margin.bottom;
+
+    var svgRight = d3.select("#rightJointPlot").html("");
+
+      svgRight = d3.select("#rightJointPlot").append("svg")
+      .attr("width", margin.right)
+      .attr("height", height + margin.top + margin.bottom)
+
+
+      var x = d3.scale.linear().range([0, width]).domain([0, 780]),
+      y = d3.scale.linear().range([0, height]).domain([371, 590]);
+
+
+    var xBins = d3.layout.histogram()
+      .range(x.domain())
+      .bins(x.ticks(10))
+      .value(function(d) {
+        return d[0];
+      })(histogramData);
+
+    var xy = d3.scale.linear()
+      .domain([0, d3.max(xBins, function(d) {
+        return d.length;
+      })])
+      .range([margin.top, 0]);
+
+    var bWidth = x(xBins[0].dx) - 1;
+
+    // right histogram
+    var gRight = svgRight.append("g")
+      .attr("transform",
+        "translate( 0 ," + margin.top + ")");
+
+    var yBins = d3.layout.histogram()
+      .range(y.domain())
+      .bins(y.ticks(15))
+      .value(function(d) {
+        return d[1];
+      })(histogramData);
+
+    console.log(yBins);
+
+    var yx = d3.scale.linear()
+      .domain([0, d3.max(yBins, function(d) {
+        return d.length;
+      })])
+      .range([0, margin.right]);
+
+    var yBar = gRight.selectAll(".bar")
+      .data(yBins)
+      .enter().append("g")
+      .attr("class", "bar")
+      .attr("transform", function(d) {
+        return "translate(" + 0 + "," + y(d.x + d.dx) + ")";
+      });
+
+    yBar.append("rect")
+      .attr("y", 1)
+      .attr("width", function(d) {
+        return yx(d.length);
+      })
+      .attr("height", bWidth)
+      .style("fill", "steelblue");
+
+
+}
 
 
     var teams = {
@@ -1021,6 +1112,7 @@ $( "#toggleColoredShotChart" ).click(function() {
         $("#image-url").attr("href","css/images/court-bg-mod-color.jpg");
         $(this).html("Hide shot zone areas");
         $('.dot').hide(2000);
+        $('#shotZoneChart').show();
         $("#toggleMadeShots").prop("disabled",true);
         $("#toggleHexBinsChart").prop("disabled",true);
         var chartSVG = loadShotsCharts(globalData);
@@ -1031,12 +1123,12 @@ $( "#toggleColoredShotChart" ).click(function() {
         $("#toggleMadeShots" ).html("Hide missed shots");
         $("#toggleMadeShots").prop("disabled",false);
         $("#toggleHexBinsChart").prop("disabled",false);
-        //$('#shotAreasLabels').hide();
+        $('#shotZoneChart').hide();
       }
       
 });
 
-$( "#toggleMadeShots" ).click(function() {
+$("#toggleMadeShots" ).click(function() {
   if ($(this).text() === "Hide missed shots") {
     $(this).html("Show missed shots");
     $('.missed').hide(2000);

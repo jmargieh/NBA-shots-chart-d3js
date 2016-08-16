@@ -38,7 +38,8 @@ function loadLiquidFillGauge(elementId, value, config) {
     if(config == null) config = liquidFillGaugeDefaultSettings();
     var width = 70;
     var height = 70;
-    var gauge = d3.select("#shotchart").append("svg:svg");
+    var gauge = d3.select("#shotchart").append("svg:svg")
+    .attr('class', "gaugeCircle");
     var radius = Math.min(parseInt(width), parseInt(height))/2;
     var locationX = config.locationX;
     var locationY = config.locationY;

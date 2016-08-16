@@ -73,19 +73,64 @@
   stroke-width: .5px;
 }
 
-/*#shotAreasLabels { 
+#ShotAreaLabels { 
   display: inline-block;
-  float: right;
+  text-align: center;
+  margin-left: 17.2%;
+  margin-top: 10px;
+}
+
+
+#ShotAreaLabels > ul > li{
+  display: block;
+  float: left;
+  margin: 10px;  
+}
+
+#shotZoneChart{
   display: none;
-}*/
+}
+
+.salmon{
+  background-color: #FF7777;   
+}
+
+.apache{
+  background-color: #D4AB6A;
+}
+
+.citron{
+  background-color: #808015;
+}
+
+.acapulco{
+  background-color: #6DA398;
+}
+
+.eden{
+  background-color: #246D5F;
+}
+
+.coralRed{
+  background-color: #FF4444;
+}
+
+.circleLabel {
+    display: inline-block;
+    content: " ";
+    height: 25px;
+    width: 25px;
+    float:left;
+    -moz-border-radius: 30px; /* or 50% */
+    border-radius: 30px; /* or 50% */
+    margin: 4px 0px 0px 1px;
+
+}
+
 
 .liquidFillGaugeText { 
   font-family: Helvetica; 
   font-weight: bold; 
-}
-
-.shot-labes ul {
-  list-style: none;
 }
 
 
@@ -102,7 +147,7 @@
 }
 
 #toggleHexBinsChart:disabled {
-    background: #ccc; 
+  background: #ccc; 
   cursor: none;
   pointer-events:none;
 }
@@ -234,13 +279,26 @@
     <div id="topJointPlot">
     </div>
       <div style="display: inline-block; margin-left: 120px;">
-        <div id="chart"> </div>
+        <div id="chart"> 
+        </div>
         <div id="hexBinsChart"> </div>
         <div id="rightJointPlot" style="float: right;">
         </div>
-      </div>
+      </div> 
   </div>
 </section>
+  
+  <div id="ShotAreaLabels">
+        <ul id="shotZoneChart">
+          <span class="circleLabel salmon"></span><li>Above the Break 3</li>
+          <span class="circleLabel apache"></span><li>In The Paint (Non-RA)</li>
+          <span class="circleLabel citron"></span><li>Left Corner 3</li>
+          <span class="circleLabel acapulco"></span><li>Mid-Range</li>
+          <span class="circleLabel eden"></span><li>Restricted Area</li>
+          <span class="circleLabel coralRed"></span><li>Right Corner 3</li>
+        </ul>
+  </div>
+
 
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
   <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
@@ -1054,6 +1112,7 @@ $( "#toggleColoredShotChart" ).click(function() {
         $("#image-url").attr("href","css/images/court-bg-mod-color.jpg");
         $(this).html("Hide shot zone areas");
         $('.dot').hide(2000);
+        $('#shotZoneChart').show();
         $("#toggleMadeShots").prop("disabled",true);
         $("#toggleHexBinsChart").prop("disabled",true);
         var chartSVG = loadShotsCharts(globalData);
@@ -1064,12 +1123,12 @@ $( "#toggleColoredShotChart" ).click(function() {
         $("#toggleMadeShots" ).html("Hide missed shots");
         $("#toggleMadeShots").prop("disabled",false);
         $("#toggleHexBinsChart").prop("disabled",false);
-        //$('#shotAreasLabels').hide();
+        $('#shotZoneChart').hide();
       }
       
 });
 
-$( "#toggleMadeShots" ).click(function() {
+$("#toggleMadeShots" ).click(function() {
   if ($(this).text() === "Hide missed shots") {
     $(this).html("Show missed shots");
     $('.missed').hide(2000);

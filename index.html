@@ -52,7 +52,7 @@
 .dot {
   stroke: #000;
   stroke-opacity: .1;
-  fill-opacity: .60;
+  fill-opacity: .5;
 }
 
 .gauge{
@@ -69,6 +69,11 @@
 
 .hexagon {
   fill: none;
+  stroke: #000;
+  stroke-width: .5px;
+}
+
+.lengendStroke {
   stroke: #000;
   stroke-width: .5px;
 }
@@ -737,6 +742,29 @@ svg.append("g")
     .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; })
     .style("fill", function(d) { return color(d.length); });
 
+
+
+      var legend = svg.append("defs").append("svg:linearGradient")
+      .attr("id", "gradient").attr("x1", "100%").attr("y1", "0%")
+      .attr("x2", "100%").attr("y2", "100%")
+      .attr("spreadMethod", "pad");
+
+      legend.append("stop").attr("offset", "0%").attr("stop-color", "black").attr("stop-opacity", 1);
+      legend.append("stop").attr("offset", "50%").attr("stop-color", "steelblue").attr("stop-opacity", 1);
+      legend.append("stop").attr("offset", "100%").attr("stop-color", "white").attr("stop-opacity", 1);
+
+      svg.append("rect").attr("width", 20).attr("height", 100).style("fill", "url(#gradient)").attr("class","lengendStroke").attr("transform", "translate(20,20)");
+      svg.append("g").append("text")
+      .attr("y", 30).attr("x", 45)
+      .style("text-anchor", "start").text("> avg");
+
+      svg.append("g").append("text")
+      .attr("y", 72).attr("x", 45)
+      .style("text-anchor", "start").text("avg")
+
+      svg.append("g").append("text")
+      .attr("y", 117).attr("x", 45)
+      .style("text-anchor", "start").text("< avg")
 
 }
 

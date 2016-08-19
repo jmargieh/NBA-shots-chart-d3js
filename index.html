@@ -168,9 +168,9 @@
 		<div class="top">
 			<div class="container">
 				<div class="col-12">
-				  <div class="col-2">
+				  <div class="col-2" style="padding-top:15px; font-size: initial;">
 					<!--<div class="logo"><img style="height:50px" src="css/images/logo.png" alt=""></div>-->
-          NBA shot chart viz.
+          NBA shot chart vis.
 				  </div>
 					<nav id="top-menu">
 						<ul class="clearfix">
@@ -184,7 +184,7 @@
                         <select>
                             <option value="index.html">Home</option>
                             <option value="wiki.html">Wiki</option>
-                            <option value="about.html">About</option>
+                            <option value="about-us.html">About us</option>
 
                         </select>
                     </nav>
@@ -753,17 +753,23 @@ svg.append("g")
       legend.append("stop").attr("offset", "50%").attr("stop-color", "steelblue").attr("stop-opacity", 1);
       legend.append("stop").attr("offset", "100%").attr("stop-color", "white").attr("stop-opacity", 1);
 
-      svg.append("rect").attr("width", 20).attr("height", 100).style("fill", "url(#gradient)").attr("class","lengendStroke").attr("transform", "translate(20,20)");
+      svg.append("rect").attr("width", 20).attr("height", 100).style("fill", "url(#gradient)").attr("class","lengendStroke").attr("transform", "translate(35,40)");
+
       svg.append("g").append("text")
-      .attr("y", 30).attr("x", 45)
+      .attr("y", 25).attr("x", -40)
+      .attr("transform", "rotate(-90)")
+      .style("text-anchor", "end").text("Efficiency");
+
+      svg.append("g").append("text")
+      .attr("y", 50).attr("x", 60)
       .style("text-anchor", "start").text("> avg");
 
       svg.append("g").append("text")
-      .attr("y", 72).attr("x", 45)
+      .attr("y", 92).attr("x", 60)
       .style("text-anchor", "start").text("avg")
 
       svg.append("g").append("text")
-      .attr("y", 117).attr("x", 45)
+      .attr("y", 137).attr("x", 60)
       .style("text-anchor", "start").text("< avg")
 
 }
